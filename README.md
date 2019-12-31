@@ -24,5 +24,6 @@ tar xf contrib/psdoom-2000.05.03-data.tar.gz -C ${PREFIX}/share/games/doom
 mv ${PREFIX}/share/games/doom/psdoom-data/*.wad ${PREFIX}/share/games/doom
 rm -rf ${PREFIX}/share/games/doom/psdoom-data/
 DESTDIR=${PREFIX} make install
+cp ../freedm.wad ${PREFIX}/share/games/doom
 ```
 
