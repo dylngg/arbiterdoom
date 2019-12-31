@@ -1,0 +1,3 @@
+[submodule "psdoom-ng1"]
+	path = psdoom-ng1
+	url = https://github.com/yeoldegrove/psdoom-ng1
