@@ -51,6 +51,7 @@ cp ../arbdoom.py $PREFIX/bin
 # Modify arbdoom file to use the correct $PREFIX:
 cat <<EOF > arbdoom
 #!/bin/sh
+# Note: You may want to put the ARB* env vars in here!
 export ARBDOOMDIR="$PREFIX/share/games/doom/psdoom-ng/arbiterdoom"
 $PREFIX/bin/arbdoom.py
 EOF

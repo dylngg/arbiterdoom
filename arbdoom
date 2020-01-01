@@ -1,3 +1,4 @@
 #!/bin/sh
+# Note: You may want to put the ARB* env vars in here!
 export ARBDOOMDIR="/usr/share/games/doom/psdoom-ng/arbiterdoom"
 /usr/bin/arbdoom.py $@
