@@ -26,7 +26,7 @@ def main(args):
         if status.occurrences >= 3:
             bad_uids.append(int(uid))
     if not bad_uids:
-        die("There are no bad users")
+        die("There are no bad users on this machine")
         return
 
     bad_users_list = ["{} ({})".format(pwd.getpwuid(uid).pw_name, pwd.getpwuid(uid).pw_gecos) for uid in bad_uids]
@@ -77,10 +77,23 @@ def command_output(cmd):
 
 
 def run(arbdoomdir):
-    os.environ["DOOMPSCMD"] = arbdoomdir + "/arbdoom-ps.sh"
+    if not os.path.exists(arbdoomdir):
+        die("{} (-m/--arbdoomdir or $ARBDOOMDIR) does not exist".format(arbdoomdir))
+
+    pscmd = "arbdoom-ps.sh"
+    pscmd_path = arbdoomdir + "/" + pscmd
+    if not os.path.exists(pscmd_path):
+        die("{} (in -m/--arbdoomdir or $ARBDOOMDIR) does not exist".format(pscmd_path))
+
+    killcmd = "arbdoom-kill.sh"
+    killcmd_path = arbdoomdir + "/" + killcmd
+    if not os.path.exists(killcmd_path):
+        die("{} (in -m/--arbdoomdir or $ARBDOOMDIR) does not exist".format(killcmd_path))
+
+    os.environ["DOOMPSCMD"] = pscmd_path
     os.environ["PSDOOMRENICECMD"] = "/bin/true"
-    os.environ["PSDOOMKILLCMD"] = "/bin/arbdoom-kill"
-    cmd = ["psdoom-ng", "-episode 1 -godstart"]
+    os.environ["PSDOOMKILLCMD"] = killcmd_path
+    cmd = ["psdoom-ng", "-episode", "1", "-godstart"]
     for line in command_output(cmd):
         sys.stdout.write(line)
 
@@ -167,8 +180,11 @@ def arbiter_environ():
         if env_name == "ARBETC" and not os.path.exists(expanded_value + "/integrations.py"):
             warn(env_value, "does not contain etc modules! (no integrations.py)")
             continue
-        if env_name == "ARBDOOMDIR" and not os.path.exists(expanded_value + "/arbps.sh"):
-            warn(env_value, "does not contain arbps.sh!")
+        if env_name == "ARBDOOMDIR" and not os.path.exists(expanded_value + "/arbdoom-ps.sh"):
+            warn(env_value, "does not contain arbdoom-ps.sh!")
+            continue
+        if env_name == "ARBDOOMDIR" and not os.path.exists(expanded_value + "/arbdoom-kill.sh"):
+            warn(env_value, "does not contain arbdoom-kill.sh!")
             continue
         env[env_name] = expanded_value
     return env
@@ -187,10 +203,11 @@ if __name__ == "__main__":
     parser.add_argument("-g", "--config",
                         type=str,
                         nargs="+",
-                        help="The configuration files to use. Configs will be "
-                             "cascaded together starting at the leftmost (the "
-                             "primary config) going right (the overwriting "
-                             "configs). Defaults to $ARBCONFIG if present or "
+                        help="The configuration files to use to find "
+                             "statusdb. Configs will be cascaded together "
+                             "starting at the leftmost (the primary config) "
+                             "going right (the overwriting configs). "
+                             "Defaults to $ARBCONFIG if present or "
                              "../etc/config.toml otherwise.",
                         default=arb_environ.get("ARBCONFIG", ["../etc/config.toml"]),
                         dest="configs")

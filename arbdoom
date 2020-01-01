@@ -1,1 +1,3 @@
-arbdoom.py
+#!/bin/sh
+export ARBDOOMDIR="/usr/share/games/doom/psdoom-ng/arbiterdoom"
+/usr/bin/arbdoom.py $@
