@@ -19,7 +19,7 @@ export PREFIX=/usr/local
 make
 make install
 # Install custom psdoom levels
-mkdir -p $PREFIX/games/doom
+mkdir -p ${PREFIX}/share/games/doom
 tar xf contrib/psdoom-2000.05.03-data.tar.gz -C ${PREFIX}/share/games/doom
 cp ${PREFIX}/share/games/doom/psdoom-data/*.wad ${PREFIX}/share/games/doom
 rm -rf ${PREFIX}/share/games/doom/psdoom-data/
@@ -45,17 +45,17 @@ export ARBCONFIG="$ARBETC/config.toml $ARBETC/_nomemsw.toml $ARBETC/_noperms.tom
 Install arbdoom
 
 ```bash
-mkdir -p $PREFIX/share/games/doom/psdoom-ng/arbiterdoom
-cp ../arbdoom-*.sh $PREFIX/share/games/doom/psdoom-ng/arbiterdoom
-cp ../arbdoom.py $PREFIX/bin
+mkdir -p ${PREFIX}/share/games/doom/psdoom-ng/arbiterdoom
+cp ../arbdoom-*.sh ${PREFIX}/share/games/doom/psdoom-ng/arbiterdoom
+cp ../arbdoom.py ${PREFIX}/bin
 # Modify arbdoom file to use the correct $PREFIX:
 cat <<EOF > arbdoom
 #!/bin/sh
 # Note: You may want to put the ARB* env vars in here!
-export ARBDOOMDIR="$PREFIX/share/games/doom/psdoom-ng/arbiterdoom"
-$PREFIX/bin/arbdoom.py
+export ARBDOOMDIR="${PREFIX}/share/games/doom/psdoom-ng/arbiterdoom"
+${PREFIX}/bin/arbdoom.py
 EOF
-cp arbdoom $PREFIX/bin
+cp arbdoom ${PREFIX}/bin
 ```
 
 ## Running
