@@ -42,6 +42,21 @@ export ARBETC="$ARBBASEDIR/etc"
 export ARBCONFIG="$ARBETC/config.toml $ARBETC/_nomemsw.toml $ARBETC/_noperms.toml"
 ```
 
+Install arbdoom
+
+```bash
+mkdir -p $PREFIX/share/games/doom/psdoom-ng/arbiterdoom
+cp ../arbdoom-*.sh $PREFIX/share/games/doom/psdoom-ng/arbiterdoom
+cp ../arbdoom.py $PREFIX/bin
+# Modify arbdoom file to use the correct $PREFIX:
+cat <<EOF > arbdoom
+#!/bin/sh
+export ARBDOOMDIR="$PREFIX/share/games/doom/psdoom-ng/arbiterdoom"
+$PREFIX/bin/arbdoom.py
+EOF
+cp arbdoom $PREFIX/bin
+```
+
 ## Running
 
 As long as the installation of psdoom-ng goes smoothly:
@@ -49,3 +64,10 @@ As long as the installation of psdoom-ng goes smoothly:
 ```bash
 ./arbdoom
 ```
+
+You may find the following flags and environment variables influential:
+
+| --- | --- |
+| `-m`/`--arbdoom`/`$ARBDOOMDIR` | Sets the directory in which the arbiterdoom scripts are loaded from. Defaults to `$ARBDOOMDIR` if present or `~/.psdoom-ng/arbiterdoom` otherwise. |
+| `-a`/`--arbdir` | `$ARBDIR` | Sets the directory in which arbiter modules are loaded from. Defaults to `$ARBDIR` if present or `../arbiter` otherwise. |
+| `-g`/`--config` | `$ARBCONFIG` | The configuration files to use for finding the location of the statusdb. Configs will be cascaded together starting at the leftmost (the primary config) going right (the overwriting configs). Defaults to `$ARBCONFIG` if present or `../etc/config.toml` otherwise. |
