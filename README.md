@@ -21,9 +21,31 @@ make install
 # Install custom psdoom levels
 mkdir -p $PREFIX/games/doom
 tar xf contrib/psdoom-2000.05.03-data.tar.gz -C ${PREFIX}/share/games/doom
-mv ${PREFIX}/share/games/doom/psdoom-data/*.wad ${PREFIX}/share/games/doom
+cp ${PREFIX}/share/games/doom/psdoom-data/*.wad ${PREFIX}/share/games/doom
 rm -rf ${PREFIX}/share/games/doom/psdoom-data/
 DESTDIR=${PREFIX} make install
 cp ../freedm.wad ${PREFIX}/share/games/doom
 ```
 
+Install picker module (cause I'm lazy and want fancy picking):
+
+```bash
+python3 -m pip install pick emoji
+```
+
+Setup `ARBDIR`, `ARBETC` and `ARBCONFIG` (if they aren't already set up):
+
+```bash
+ARBBASEDIR="/usr/local/src/Arbiter2/1.3.3/"
+export ARBDIR="$ARBBASEDIR/arbiter"
+export ARBETC="$ARBBASEDIR/etc"
+export ARBCONFIG="$ARBETC/config.toml $ARBETC/_nomemsw.toml $ARBETC/_noperms.toml"
+```
+
+## Running
+
+As long as the installation of psdoom-ng goes smoothly:
+
+```bash
+./arbdoom
+```
