@@ -67,7 +67,8 @@ As long as the installation of psdoom-ng goes smoothly:
 
 You may find the following flags and environment variables influential:
 
+| Flags and Env Vars | Description |
 | --- | --- |
 | `-m`/`--arbdoom`/`$ARBDOOMDIR` | Sets the directory in which the arbiterdoom scripts are loaded from. Defaults to `$ARBDOOMDIR` if present or `~/.psdoom-ng/arbiterdoom` otherwise. |
-| `-a`/`--arbdir` | `$ARBDIR` | Sets the directory in which arbiter modules are loaded from. Defaults to `$ARBDIR` if present or `../arbiter` otherwise. |
-| `-g`/`--config` | `$ARBCONFIG` | The configuration files to use for finding the location of the statusdb. Configs will be cascaded together starting at the leftmost (the primary config) going right (the overwriting configs). Defaults to `$ARBCONFIG` if present or `../etc/config.toml` otherwise. |
+| `-a`/`--arbdir`/`$ARBDIR` | Sets the directory in which arbiter modules are loaded from. Defaults to `$ARBDIR` if present or `../arbiter` otherwise. |
+| `-g`/`--config`/`$ARBCONFIG` | The configuration files to use for finding the location of the statusdb. Configs will be cascaded together starting at the leftmost (the primary config) going right (the overwriting configs). Defaults to `$ARBCONFIG` if present or `../etc/config.toml` otherwise. |
