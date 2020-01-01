@@ -30,7 +30,7 @@ cp ../freedm.wad ${PREFIX}/share/games/doom
 Install picker module (cause I'm lazy and want fancy picking):
 
 ```bash
-python3 -m pip install pick emoji
+python3 -m pip install pick
 ```
 
 Setup `ARBDIR`, `ARBETC` and `ARBCONFIG` (if they aren't already set up):
