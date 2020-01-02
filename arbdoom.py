@@ -40,17 +40,17 @@ def main(args):
     bad_processes = {pid: pidinfo.Process(pid) for pid in bad_pids}
     with open("/tmp/arbdoom-target-procs.txt", 'w') as f:
         for pid, bad_proc in bad_processes.items():
-            name = bad_proc.curr_name().strip("()")
-            owner_uid = bad_proc.curr_owner(effective_uid=False)
-            username = pwd.getpwuid(owner_uid).pw_name
+            try:
+                name = bad_proc.curr_name().strip("()")
+                owner_uid = bad_proc.curr_owner(effective_uid=False)
+                username = pwd.getpwuid(owner_uid).pw_name
+            except OSError:
+                continue
             if owner_uid != bad_uid:
                 print("Skipped", name, "since it is not owned by", username_realname)
                 continue
 
-            try:
-                f.write("{} {} {} 0\n".format(username, pid, name))
-            except FileNotFoundError:
-                continue
+            f.write("{} {} {} 0\n".format(username, pid, name))
     run(args.arbdoomdir)
     os.remove("/tmp/arbdoom-target-procs.txt")
 
