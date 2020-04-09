@@ -55,6 +55,7 @@ cat <<EOF > arbdoom
 export ARBDOOMDIR="${PREFIX}/share/games/doom/psdoom-ng/arbiterdoom"
 ${PREFIX}/bin/arbdoom.py
 EOF
+chmod +x arbdoom
 cp arbdoom ${PREFIX}/bin
 ```
 
