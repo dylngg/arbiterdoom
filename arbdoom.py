@@ -10,17 +10,34 @@ import pwd
 import toml
 
 
+def parse_statusdb_url(args):
+    """
+    Given args, return the correct statusdb url.
+    """
+    # Local sqlite database
+    if args.database_loc:
+        return "sqlite:///{}".format(args.database_loc)
+    # Provided URL
+    elif args.statusdb_url:
+        return args.statusdb_url
+    # Resolve to what statusdb_url is when empty in the config
+    elif cfg.database.statusdb_url == "":
+        return "sqlite:///{}".format(cfg.database.log_location + "/statuses.db")
+    # Use statusdb_url from the config
+    else:
+        return cfg.database.statusdb_url
+
+
 def die(last_words):
     sys.stderr.write(last_words + " :( \n")
     sys.exit(1)
 
 
 def main(args):
-    status_config = statuses.StatusConfig(
-        status_loc=args.database_loc,
-        status_table=shared.status_tablename
-    )
-    user_statuses = statuses.read_status(status_config=status_config)
+    statusdb_url = parse_statusdb_url(args)
+    statusdb_obj = statusdb.lookup_statusdb(statusdb_url)
+    user_statuses = statusdb_obj.read_status()
+
     bad_uids = []
     for uid, status in user_statuses.items():
         if status.occurrences >= 3:
@@ -32,7 +49,7 @@ def main(args):
     bad_users_list = ["{} ({})".format(pwd.getpwuid(uid).pw_name, pwd.getpwuid(uid).pw_gecos) for uid in bad_uids]
     username_realname, index = pick.pick(bad_users_list, "Which user do you want to kill?", indicator='->')
     bad_uid = bad_uids[index]
-    bad_slice = cinfo.UserSlice(bad_uid)
+    bad_slice = cginfo.UserSlice(bad_uid)
     if not bad_slice.active():
         die(username_realname + " is not alive")
 
@@ -109,6 +126,7 @@ def bootstrap(args):
     args.configs = [os.path.abspath(path) for path in args.configs]
     os.chdir(args.arbdir)
     insert(args.arbdir)
+
     import cfgparser
     try:
         if not cfgparser.load_config(*args.configs, pedantic=False):
@@ -116,7 +134,6 @@ def bootstrap(args):
                   "above). You can investigate this with the cfgparser.py "
                   "tool.")
             sys.exit(2)
-        args.database_loc = cfgparser.cfg.database.log_location + "/" + cfgparser.shared.statusdb_name
     except (TypeError, toml.decoder.TomlDecodeError) as err:
         print("Configuration error:", str(err), file=sys.stderr)
         sys.exit(2)
@@ -222,10 +239,26 @@ if __name__ == "__main__":
                             os.path.expanduser("~/.psdoom-ng/arbiterdoom")
                         ),
                         dest="arbdoomdir")
+    env = parser.add_mutually_exclusive_group()
+    env.add_argument("-u", "--statusdb-url",
+                     type=str,
+                     help="Uses the specified statusdb url. Defaults "
+                          "to database.statusdb_url specified in the "
+                           "configuration.",
+                    dest="statusdb_url")
+    env.add_argument("-d", "--database",
+                     type=str,
+                     help="Uses the specified sqlite statusdb, rather "
+                          "than database.statusdb_url specified in the "
+                          "configuration. In this case, no synchronization "
+                          "to other hosts will occur, since local SQLite "
+                          "databases are not shared between hosts.",
+                     dest="database_loc")
     args = parser.parse_args()
     bootstrap(args)
     import statuses
+    import statusdb
     from cfgparser import shared, cfg
-    import cinfo
+    import cginfo
     import pidinfo
     main(args)
