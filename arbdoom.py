@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import subprocess
+import shutil
 import pick
 import shlex
 import time
@@ -110,7 +111,11 @@ def run(arbdoomdir):
     os.environ["DOOMPSCMD"] = pscmd_path
     os.environ["PSDOOMRENICECMD"] = "/bin/true"
     os.environ["PSDOOMKILLCMD"] = killcmd_path
-    cmd = ["psdoom-ng", "-episode", "1", "-godstart"]
+
+    psdoom_path = shutil.which("psdoom-ng")
+    psdoom_prefix = os.path.dirname(os.path.dirname(psdoom_path))  # /usr/local/bin/psdoom-ng -> /usr/local
+    iwad = os.path.join(psdoom_prefix, "share/games/doom/psdoom1.wad")
+    cmd = [psdoom_path, "-episode", "1", "-godstart", "-iwad", iwad]
     for line in command_output(cmd):
         sys.stdout.write(line)
 
