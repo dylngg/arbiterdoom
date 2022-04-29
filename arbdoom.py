@@ -56,7 +56,8 @@ def main(args):
 
     bad_pids = bad_slice.pids()
     bad_processes = {pid: pidinfo.Process(pid) for pid in bad_pids}
-    with open("/tmp/arbdoom-target-procs.txt", 'w') as f:
+    with open("/tmp/arbdoom-target-procs.txt", "w+") as f:
+        f.truncate()
         for pid, bad_proc in bad_processes.items():
             try:
                 name = bad_proc.curr_name().strip("()")
@@ -69,6 +70,7 @@ def main(args):
                 continue
 
             f.write("{} {} {} 0\n".format(username, pid, name))
+
     run(args.arbdoomdir)
     os.remove("/tmp/arbdoom-target-procs.txt")
 
