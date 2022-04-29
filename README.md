@@ -53,6 +53,7 @@ cat <<EOF > arbdoom
 #!/bin/sh
 # Note: You may want to put the ARB* env vars in here!
 export ARBDOOMDIR="${PREFIX}/share/games/doom/psdoom-ng/arbiterdoom"
+export PATH="$PATH:${PREFIX}/bin"
 ${PREFIX}/bin/arbdoom.py
 EOF
 chmod +x arbdoom
