@@ -3,10 +3,10 @@ psDooM but where the processes belong to bad users detected by [Arbiter](https:/
 
 ## Installation
 
-Install requirements (gcc, make, libsdl2, libsdl2-net, libsdl-mixer, python-imaging):
+Install requirements (gcc, make, libsdl1.2):
 
 ```bash
-apt install gcc make libsdl2-dev libsdl2-net-dev libsdl2-mixer-dev python-imaging
+apt install gcc make libsdl1.2-dev libsdl-mixer1.2-dev libsdl-net1.2-dev
 ```
 
 Build psdoom-ng (based on [chocolate-doom](https://www.chocolate-doom.org/wiki/index.php/Building_Chocolate_Doom_on_Linux)):
